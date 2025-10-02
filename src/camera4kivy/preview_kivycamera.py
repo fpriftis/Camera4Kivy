@@ -243,26 +243,51 @@ class PreviewKivyCamera(PreviewCommon, CommonGestures):
     # Parse Arguments
     #############################################
 
-    def set_index(self, index):
-        index = index.lower()
-        try:
-            int(index)
-            isint = True
-        except:
-            isint = False
-        if isint:
-            self.index = int(index)
-        elif index == 'front':
-            self.index = 1
-        elif index == 'back':
-            self.index = 0
-        elif index == 'toggle' and self.index == 0:
-            self.index = 1
-        elif index == 'toggle' and self.index == 1:
-            self.index = 0
-        else:
-            self.index = 0;     
+    # def set_index(self, index):
+    #     index = index.lower()
+    #     try:
+    #         int(index)
+    #         isint = True
+    #     except:
+    #         isint = False
+    #     if isint:
+    #         self.index = int(index)
+    #     elif index == 'front':
+    #         self.index = 1
+    #     elif index == 'back':
+    #         self.index = 0
+    #     elif index == 'toggle' and self.index == 0:
+    #         self.index = 1
+    #     elif index == 'toggle' and self.index == 1:
+    #         self.index = 0
+    #     else:
+    #         self.index = 0;     
 
+    def set_index(self, index):
+        try:
+            self.index = int(index)       
+            return
+        except (ValueError, TypeError):
+            pass
+
+        
+        if isinstance(index, str):
+            low = index.lower()
+            
+            if low == 'front':
+                self.index = 1
+            elif low == 'back':
+                self.index = 0
+            elif low == 'toggle' and getattr(self, "index", 0) == 0:
+                self.index = 1
+            elif low == 'toggle' and getattr(self, "index", 0) == 1:
+                self.index = 0
+            else:
+                # if any other string value like "tcp://165.22.11.3:5555"
+                self.index = index
+
+        else:
+            self.index = 0
     #############################################
     # Camera Events
     #############################################
